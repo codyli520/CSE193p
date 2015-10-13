@@ -10,16 +10,18 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    @IBOutlet weak var output: UILabel!
+    var userTouched : Bool = false
+    
+    @IBAction func digits(sender: UIButton) {
+        let digits = sender.currentTitle!
+        if userTouched{
+            output.text = output.text! + digits
+        }
+        else{
+            output.text = digits
+            userTouched = true
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
 
