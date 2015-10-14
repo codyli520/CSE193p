@@ -12,10 +12,14 @@ import Darwin
 class ViewController: UIViewController {
 
     @IBOutlet weak var output: UILabel!
-    var userTyping = false
     
+    @IBOutlet weak var history: UILabel!
+    var userTyping = false
+    var pointExist = false
+    var isOp = false
     @IBAction func digits(sender: UIButton) {
         let digits = sender.currentTitle!
+        isOp = false
         if userTyping{
             output.text = output.text! + digits
         }
@@ -23,13 +27,39 @@ class ViewController: UIViewController {
             output.text = digits
             userTyping = true
         }
+        
+        history.text = history.text!+digits
+    }
+    
+    @IBAction func floatPoint(sender: UIButton) {
+        let point = "."
+        isOp = false
+        if userTyping{
+            if !pointExist{
+               output.text = output.text! + point
+                pointExist = true
+            }
+        }
+        else{
+            if !pointExist{
+                output.text = "0" + point
+                userTyping = true
+                pointExist = true
+            }
+        }
+        history.text = history.text!+output.text!
     }
     
     var operandStack = Array<Double>()
     
     @IBAction func enter() {
         userTyping = false
+        pointExist = false
         operandStack.append(displayValue)
+        if !isOp{
+            history.text = history.text!+"⏎"
+            isOp = false
+        }
         print("operant stack = \(operandStack)")
     }
     
@@ -43,8 +73,11 @@ class ViewController: UIViewController {
         }
     }
     
+    
     @IBAction func operate(sender: UIButton) {
         let operation = sender.currentTitle!
+        history.text = history.text!+sender.currentTitle!
+        isOp = true
         if userTyping{
             enter()
         }
@@ -60,6 +93,10 @@ class ViewController: UIViewController {
             displayValue = M_PI
             enter()
         case "√": performOperation{sqrt($0)}
+        case "c":
+            history.text?.removeAll()
+            output.text = "0"
+            operandStack.removeAll()
         default: break
             }
         
